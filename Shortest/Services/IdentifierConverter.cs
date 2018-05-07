@@ -10,12 +10,12 @@ namespace Shortest.Services
 
         public string Encode(long id)
         {
-            return IntToString(Rearrange((ulong)id));
+            return IntToString(Rearrange((ulong)id ^ XorValue));
         }
 
         public long Decode(string id)
         {
-            return (long)Rearrange(StringToInt(id));
+            return (long)(Rearrange(StringToInt(id)) ^ XorValue);
         }
 
         private ulong Rearrange(ulong value)
@@ -30,7 +30,7 @@ namespace Shortest.Services
                 newValue |= (value & 1) << newBytePosition * 8 + newBitPosition;
             }
 
-            return newValue ^ XorValue;
+            return newValue;
         }
 
         private string IntToString(ulong value)

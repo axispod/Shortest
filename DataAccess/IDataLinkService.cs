@@ -9,6 +9,6 @@ namespace DataAccess
         void Remove(Link link);
         Link GetById(long id);
         void IncrementRedirectsCount(Link link);
-        IEnumerable<Link> GetLinks(int userId);
+        IEnumerable<Link> GetLinks(long userId);
     }
 }

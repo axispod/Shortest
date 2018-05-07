@@ -66,7 +66,7 @@ namespace DataAccess.Sqlite
             }
         }
 
-        public IEnumerable<Link> GetLinks(int userId)
+        public IEnumerable<Link> GetLinks(long userId)
         {
             using (var connection = connectionFactory.CreateConnection())
             {

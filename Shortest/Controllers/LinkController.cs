@@ -44,9 +44,9 @@ namespace Shortest.Controllers
 
             linkService.Add(link);
 
-            return Json(new
+            return Json(new AddViewModel
             {
-                shortUrl = shortLinkBuilder.Build(ControllerContext, link.Id)
+                ShortUrl = shortLinkBuilder.Build(ControllerContext, link.Id)
             });
         }
 
