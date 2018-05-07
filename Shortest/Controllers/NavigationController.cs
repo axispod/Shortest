@@ -15,11 +15,6 @@ namespace Shortest.Controllers
             this.identifierConverter = identifierConverter;
         }
 
-        // GET
-        // http://localhost:13249/3QWkCkp8p6b
-        // http://localhost:13249/5RmpN2e3Gio - Тестовое задание
-        // http://localhost:13249/6245NQ3xiyU - Dapper
-
         [HttpGet("{id}")]
         public IActionResult Index(string id)
         {
@@ -31,7 +26,6 @@ namespace Shortest.Controllers
 
             linkService.IncrementRedirectsCount(link);
 
-            // I use the permanent redirection because user can't edit links
             return new RedirectResult(link.Url); 
         }
     }
