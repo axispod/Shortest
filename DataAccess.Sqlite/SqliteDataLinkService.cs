@@ -39,8 +39,9 @@ namespace DataAccess.Sqlite
 
             using (var connection = connectionFactory.CreateConnection())
             {
-                helperService.ExequtePlain(connection, "DELETE FROM links WHERE rowid=$rowid",
-                    new Parameter("$rowid", link.Id));
+                helperService.ExequtePlain(connection, "DELETE FROM links WHERE rowid=$rowid AND UserId=$userId",
+                    new Parameter("rowid", link.Id),
+                    new Parameter("userId", link.UserId));
             }
         }
 

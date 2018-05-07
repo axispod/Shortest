@@ -2,6 +2,7 @@
 using DataAccess;
 using DataAccess.Models;
 using Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shortest.Models.ViewModels;
 
@@ -12,21 +13,25 @@ namespace Shortest.Controllers
     {
         private readonly IDataLinkService linkService;
         private readonly IShortLinkBuilder shortLinkBuilder;
+        private readonly ITokenService tokenService;
 
-        public LinkController(IDataLinkService linkService, IShortLinkBuilder shortLinkBuilder)
+        public LinkController(IDataLinkService linkService, IShortLinkBuilder shortLinkBuilder, ITokenService tokenService)
         {
             this.linkService = linkService;
             this.shortLinkBuilder = shortLinkBuilder;
+            this.tokenService = tokenService;
         }
 
-        [HttpGet("u{id}")]
-        public JsonResult Get(int id)
+        [Authorize(AuthenticationSchemes = "Bearer")]
+        [HttpGet]
+        public JsonResult Get()
         {
             return Json(
                 linkService
-                    .GetLinks(id)
+                    .GetLinks(GetUserId())
                     .Select(link => new LinkViewModel
                     {
+                        Id = link.Id,
                         CreationDate = link.CreationDate,
                         OriginalUrl = link.Url,
                         ShortUrl = shortLinkBuilder.Build(ControllerContext, link.Id),
@@ -34,12 +39,14 @@ namespace Shortest.Controllers
                     }));
         }
 
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPost]
         public JsonResult Add([FromQuery]string url)
         {
             var link = new Link
             {
-                Url = url
+                Url = url,
+                UserId = GetUserId()
             };
 
             linkService.Add(link);
@@ -50,13 +57,20 @@ namespace Shortest.Controllers
             });
         }
 
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
             linkService.Remove(new Link
             {
-                Id = id
+                Id = id,
+                UserId = GetUserId()
             });
+        }
+
+        private long GetUserId()
+        {
+            return tokenService.GetUserId(User);
         }
     }
 }

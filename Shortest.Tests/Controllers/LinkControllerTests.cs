@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using DataAccess;
 using DataAccess.Models;
 using FakeItEasy;
@@ -47,10 +48,10 @@ namespace Shortest.Tests.Controllers
             A.CallTo(() => linkBuilder.Build(A<ActionContext>.Ignored, A<long>.Ignored))
                 .ReturnsLazily((ActionContext context, long id) => $"ZXA{id}");
 
-            var controller = new LinkController(linkService, linkBuilder);
+            var controller = new LinkController(linkService, linkBuilder, CreateTokenServiceMock());
 
             // Act
-            var result = (controller.Get(0).Value as IEnumerable<LinkViewModel>).ToArray();
+            var result = (controller.Get().Value as IEnumerable<LinkViewModel>).ToArray();
 
             // Assert
             Assert.That(result[0].CreationDate, Is.EqualTo(date1));
@@ -76,13 +77,22 @@ namespace Shortest.Tests.Controllers
             A.CallTo(() => linkBuilder.Build(A<ActionContext>.Ignored, A<long>.Ignored))
                 .ReturnsLazily((ActionContext context, long id) => $"coded short url");
 
-            var controller = new LinkController(linkService, linkBuilder);
+            var controller = new LinkController(linkService, linkBuilder, CreateTokenServiceMock());
 
             // Act
             var result = controller.Add("some url").Value as AddViewModel;
 
             // Assert
             Assert.That(result.ShortUrl, Is.EqualTo("coded short url"));
+        }
+
+        private ITokenService CreateTokenServiceMock()
+        {
+            var tokenService = A.Fake<ITokenService>();
+
+            A.CallTo(() => tokenService.GetUserId(A<IPrincipal>.Ignored)).Returns(42);
+
+            return tokenService;
         }
     }
 }

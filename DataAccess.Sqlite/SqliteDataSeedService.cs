@@ -29,6 +29,17 @@
                         "CreationDate INT" +
                         ")");
                 }
+
+                if(!helperService.IsTableExists(connection, "users"))
+                {
+                    helperService.ExequtePlain(connection,
+                        "CREATE TABLE users (" +
+                        "Username TEXT UNIQUE," +
+                        "Password TEXT," +
+                        "Salt TEXT," +
+                        "CreationDate INT" +
+                        ")");
+                }
             }
         }
     }

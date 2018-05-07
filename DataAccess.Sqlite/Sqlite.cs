@@ -1,8 +1,5 @@
-﻿using System.Runtime.CompilerServices;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-
-[assembly:InternalsVisibleTo("DataAccess.Sqlite.Tests")]
 
 namespace DataAccess.Sqlite
 {
@@ -12,6 +9,7 @@ namespace DataAccess.Sqlite
         {
             services.AddTransient<IDataConnectionFactory, SqliteDataConnectionFactory>();
             services.AddTransient<IDataLinkService, SqliteDataLinkService>();
+            services.AddTransient<IDataUserService, SqliteDataUserService>();
             services.AddTransient<IDataSeedService, SqliteDataSeedService>();
             services.AddTransient<ISqliteDataReaderService, SqliteDataReaderService>();
             services.AddTransient<ISqliteDataMapperFactory, SqliteDataMapperFactory>();

@@ -19,6 +19,9 @@ namespace DataAccess.Sqlite
             if(modelType == typeof(Link))
                 return ActivatorUtilities.CreateInstance<LinkMapper>(serviceProvider);
 
+            if (modelType == typeof(User))
+                return ActivatorUtilities.CreateInstance<UserMapper>(serviceProvider);
+
             return null;
         }
     }
